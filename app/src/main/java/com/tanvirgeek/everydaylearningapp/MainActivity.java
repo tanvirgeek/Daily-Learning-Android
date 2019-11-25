@@ -1,5 +1,6 @@
 package com.tanvirgeek.everydaylearningapp;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -24,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText number1EditText;
     private EditText number2EditText;
     private Button activity2Button;
+    private TextView resultText;
 
 
 
@@ -35,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         number1EditText = findViewById(R.id.number1_edit_text);
         number2EditText = findViewById(R.id.number2_edit_text);
         activity2Button = findViewById(R.id.activity_2_Button);
+        resultText = findViewById(R.id.result_text_view);
 
         activity2Button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,9 +49,10 @@ public class MainActivity extends AppCompatActivity {
                 }else {
                     int number1 = Integer.parseInt(number1EditText.getText().toString());
                     int number2 = Integer.parseInt(number2EditText.getText().toString());
-                    Intent intentActivity2 = new Intent();
+                    Intent intentActivity2 = new Intent(MainActivity.this, Main2Activity.class);
                     intentActivity2.putExtra("N1", number1);
                     intentActivity2.putExtra("N2",number2);
+                    startActivityForResult(intentActivity2,1);
                 }
 
             }
@@ -77,5 +81,21 @@ public class MainActivity extends AppCompatActivity {
         mainAdapter = new MainAdapter(MainActivity.this, mainModels);
         //Set Main adapter to recyclerView
         recyclerView.setAdapter(mainAdapter);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == 1){
+            if(resultCode == RESULT_OK){
+                int result = data.getIntExtra("result",0);
+                resultText.setText(Integer.toString(result));
+
+            }
+            if(resultCode == RESULT_CANCELED){
+                resultText.setText("Nothing Selected");
+            }
+        }
     }
 }
